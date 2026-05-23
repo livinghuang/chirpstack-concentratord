@@ -4,6 +4,7 @@ use libloragw_sx1302::hal;
 pub mod dragino;
 pub mod elecrow;
 pub mod embit;
+pub mod linxdot;
 pub mod miromico;
 pub mod multitech;
 pub mod rak;
