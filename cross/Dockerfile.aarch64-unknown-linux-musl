@@ -11,7 +11,18 @@ RUN apt-get update && \
     apt-get --assume-yes install \
     protobuf-compiler \
     libprotobuf-dev \
-    git
+    git \
+    clang \
+    libclang-dev \
+    libclang1-18
+
+# 已用 `dpkg -L libclang1-18` 實際查證過這個路徑下有 libclang.so.1（symlink 指向
+# libclang-18.so.18），不要再用 find 動態偵測——build 階段的 `find /` 出於未知原因
+# 找不到這個明明存在的檔案（可能跟 BuildKit 的 overlay 掛載方式有關，未查證），
+# 用 docker run 事後手動驗證卻找得到，乾脆直接寫死已驗證過的路徑。
+RUN test -f /usr/lib/llvm-18/lib/libclang.so.1
+
+ENV LIBCLANG_PATH=/usr/lib/llvm-18/lib
 
 RUN mkdir /hal
 
